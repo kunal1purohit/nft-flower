@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NFT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        header {
+            background-color: #000000;
+            color: #fff;
+            padding: 10px;
+        }
+
+
+        nav {
+            background-color: #b16060;
+            color: #000000;
+            padding: 10px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .shop-item {
+            background-color: #a69964;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        
+            display: flex;
+            align-items: center;
+        }
+
+        .shop-item img {
+            width: 200px;
+            margin-right: 20px;
+        }
+
+        .shop-item p {
+            margin: 0;
+        }
+
+        .cart-item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item p {
+            margin: 0;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .buy-now {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>NFT Marketplace</h1>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="/">Shop</a>
+            <a href="/cart">Cart</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="shop-page">
+            <h2>Shop</h2>
+            <div id="shop-items"></div>
+        </div>
+
+        <div id="cart-page" style="display: none;">
+            <h2>Cart</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total" class="cart-total"></div>
+            <div class="buy-now">
+              <button id="buy-now-button">Buy Now</button>
+            </div>
+          </div>
+        
+    </div>
+
+    <script>
+       
+        const shopPage = document.getElementById('shop-page');
+        const shopItemsContainer = document.getElementById('shop-items');
+
+        
+        const cartPage = document.getElementById('cart-page');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+
+       
+        const itemsData = [
+            {
+                id: 1,
+                name: 'rose ',
+                price: 100,
+                image: 'https://cdn.pixabay.com/photo/2014/04/10/11/24/rose-320868_640.jpg',
+            },
+            {
+                id: 2,
+                name: 'tulip ',
+                price: 150,
+                image: 'https://cdn.pixabay.com/photo/2018/04/29/18/24/tulip-3360748_640.jpg',
+            },
+            {
+                id: 3,
+                name: 'sunflower ',
+                price: 180,
+                image: 'https://cdn.pixabay.com/photo/2018/01/28/11/24/sunflower-3113318_640.jpg',
+            },
+            {
+                id: 4,
+                name: 'lotus ',
+                price: 10,
+                image: 'https://cdn.pixabay.com/photo/2015/10/09/00/55/lotus-978659_1280.jpg',
+            },
+        ];
+
+        
+        let cartItems = [];
+
+       
+        function renderShopItems() {
+            shopItemsContainer.innerHTML = '';
+
+            itemsData.forEach((item) => {
+                const shopItem = document.createElement('div');
+                shopItem.className = 'shop-item';
+
+                const image = document.createElement('img');
+                image.src = item.image;
+                shopItem.appendChild(image);
+
+                const name = document.createElement('p');
+                name.textContent = item.name;
+                shopItem.appendChild(name);
+
+                const price = document.createElement('p');
+                price.textContent = 'Rs.' + item.price;
+                shopItem.appendChild(price);
+
+                const addButton = document.createElement('button');
+                addButton.textContent = 'Add to Cart';
+                addButton.addEventListener('click', () => {
+                    addToCart(item);
+                });
+                shopItem.appendChild(addButton);
+
+                shopItemsContainer.appendChild(shopItem);
+            });
+        }
+
+        
+        function renderCartItems() {
+            cartItemsContainer.innerHTML = '';
+
+            cartItems.forEach((item) => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+
+                const image = document.createElement('img');
+                image.src = item.image;
+                cartItem.appendChild(image);
+
+                const name = document.createElement('p');
+                name.textContent = item.name;
+                cartItem.appendChild(name);
+
+                const price = document.createElement('p');
+                price.textContent = 'Rs.' + item.price;
+                cartItem.appendChild(price);
+
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            cartTotal.textContent = 'Total: Rs.' + calculateTotalPrice();
+        }
+
+
+        function addToCart(item) {
+            if (!cartItems.includes(item)) {
+                cartItems.push(item);
+                renderShopItems();
+                renderCartItems();
+            }
+        }
+
+        
+        function calculateTotalPrice() {
+            return cartItems.reduce((total, item) => total + item.price, 0);
+        }
+
+        
+        function navigateToShopPage() {
+            shopPage.style.display = 'block';
+            cartPage.style.display = 'none';
+        }
+
+       
+        function navigateToCartPage() {
+            shopPage.style.display = 'none';
+            cartPage.style.display = 'block';
+        }
+
+       
+        renderShopItems();
+        renderCartItems();
+
+        
+        document.querySelector('a[href="/"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateToShopPage();
+        });
+
+        document.querySelector('a[href="/cart"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateToCartPage();
+        });
+
+        document.getElementById('buy-now-button').addEventListener('click', () => {
+      cartItems.forEach((item) => {
+        const index = itemsData.findIndex((data) => data.id === item.id);
+        if (index !== -1) {
+          itemsData.splice(index, 1);
+        }
+      });
+
+      cartItems = [];
+      renderShopItems();
+      renderCartItems();
+    });
+    </script>
+</body>
+
+</html>
